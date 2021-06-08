@@ -1,0 +1,77 @@
+import * as React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Audio } from 'expo-av';
+
+import db from "../config"
+
+export default class SoundButton extends React.Component {
+  playSound = async () => {
+    await Audio.Sound.createAsync(
+      { uri: 'http://soundbible.com/mp3/Buzzer-SoundBible.com-188422102.mp3' },
+      { shouldPlay: true }
+    );
+  };
+
+isPressed(){
+
+  var color = this.props.color;
+  var time = new Date().getTime(); 
+
+  db.ref(color).update({
+    'isPressed':true,
+    'timeStamp':time
+  })
+  console.log(color)
+}
+
+  render() {
+    return (
+      <TouchableOpacity style={[styles.button,{backgroundColor: this.props.color}]} 
+      onPress={()=>{
+        this.isPressed();
+        this.playSound}}>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', fontStyle: 'italic' }}>
+          Press Me
+        </Text>
+      </TouchableOpacity>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  button: {
+    marginLeft: 70,
+    borderWidth: 1,
+    borderColor: 'black',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 200,
+    height: 200,
+    backgroundColor: 'red',
+    borderRadius: 100,
+    marginTop:80
+  },
+});
+
+
+
+
+
+
+
+import firebase from 'firebase';
+
+const firebaseConfig = {
+    apiKey: "AIzaSyAYZLJdROt5eO7erLt9fLoFX6dQIftOqt4",
+    authDomain: "wireless-buzzer-6dfe6.firebaseapp.com",
+    databaseURL: "https://wireless-buzzer-6dfe6.firebaseio.com",
+    projectId: "wireless-buzzer-6dfe6",
+    storageBucket: "wireless-buzzer-6dfe6.appspot.com",
+    messagingSenderId: "381216744431",
+    appId: "1:381216744431:web:1af8877b730aa2a6034c1a",
+    measurementId: "G-LMR16ZWSRG"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+
+  export default firebase.database();
